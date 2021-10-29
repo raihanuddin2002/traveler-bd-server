@@ -22,14 +22,8 @@ async function run(){
 
         // GET API
         app.get("/services", async (req,res) => {
-            // console.log(req.query);
-            // const page = parseInt(req.query.page);
-            // const size = parseInt(req.query.size);
             const cursor = productsCollection.find({});
             const services = await cursor.toArray();
-            //const count = await cursor.count();
-            
-            
             res.send(services);
         }) 
     }finally{
