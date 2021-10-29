@@ -34,15 +34,6 @@ async function run () {
             res.send(service);
         })
 
-        
-
-    //    DELETE API
-        app.delete("/services/:id", async(req,res) => {
-            const id = req.params.id;
-            const query = {_id: ObjectId(id)};
-            const result = await servicesCollention.deleteOne(query);
-            res.send(result);
-        })
     }finally{
 
     }
@@ -52,13 +43,30 @@ async function run () {
         await client.connect(); 
         const database = client.db("traveller");
         const servicesCollention = database.collection("proceedOrder");
-
+        
         // POST API
         app.post("/services/:id", async (req,res) => {
             const user = req.body;
-            const result = await servicesCollention.insertOne(user);
+            const result = await servicesCollention.insertOne("hiiting",user);
            res.send(result);
        });
+
+        app.post("/myOrders", async (req,res) => {
+            const userEmail = req.body.userEmail;
+            //console.log(userEmail);
+            const cursor =servicesCollention.find({});
+            const result = await cursor.toArray();
+            const newResult = result.filter(newResult => newResult.email === userEmail);
+            res.send(newResult);
+        });
+
+        //    DELETE API
+        app.delete("/myOrders/:id", async(req,res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await servicesCollention.deleteOne(query);
+            res.send(result);
+        })
     }finally{
 
     }
@@ -68,7 +76,7 @@ run().catch(console.dir());
 
 // Basic
 app.get("/", (req,res) => {
-    res.send("Server Running...");
+    res.send("Traveller BD Server Running...");
 });
 
 app.listen(port, () => {
