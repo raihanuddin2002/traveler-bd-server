@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const {MongoClient} = require("mongodb");
 const cors = require("cors");
-const { parse } = require("dotenv");
 const dotEnv = require('dotenv').config();
 const port = process.env.PORT || 5000;
 
@@ -25,7 +24,12 @@ async function run(){
             const cursor = productsCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
-        }) 
+        });
+
+        // POST API
+        app.post("/services/:id", (req,res) => {
+            const id = req.params.id;
+        })
     }finally{
 
     }
