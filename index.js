@@ -1,45 +1,76 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const {MongoClient} = require("mongodb");
+const {MongoClient} = require("mongodb"); 
+const env = require('dotenv').config();
 const cors = require("cors");
-const dotEnv = require('dotenv').config();
-const port = process.env.PORT || 5000;
+const ObjectId = require("mongodb").ObjectId;
+
+const port = 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// DATABASE
+// DATABASE 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.svqjf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-async function run(){
+async function run () {
     try{
-        await client.connect();
+        await client.connect(); 
         const database = client.db("traveller");
-        const productsCollection = database.collection("services");
-
+        const servicesCollention = database.collection("services");
+        
         // GET API
         app.get("/services", async (req,res) => {
-            const cursor = productsCollection.find({});
-            const services = await cursor.toArray();
+            const cursor = servicesCollention.find({});
+            const services =await cursor.toArray();
             res.send(services);
-        });
-
-        // POST API
-        app.post("/services/:id", (req,res) => {
+        })
+        app.get("/services/:id", async (req,res) => {
             const id = req.params.id;
+            const query = {_id: ObjectId(id)}
+            const service = await servicesCollention.findOne(query);
+            res.send(service);
+        })
+
+        
+
+    //    DELETE API
+        app.delete("/services/:id", async(req,res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await servicesCollention.deleteOne(query);
+            res.send(result);
         })
     }finally{
 
     }
+
+    // Order
+    try{
+        await client.connect(); 
+        const database = client.db("traveller");
+        const servicesCollention = database.collection("proceedOrder");
+
+        // POST API
+        app.post("/services/:id", async (req,res) => {
+            const user = req.body;
+            const result = await servicesCollention.insertOne(user);
+           res.send(result);
+       });
+    }finally{
+
+    }
 }
-run().catch(console.dir);
-// Base setup
-app.get("/", (req, res) => {
-    res.send("Travelling Server running...");
+run().catch(console.dir());
+
+
+// Basic
+app.get("/", (req,res) => {
+    res.send("Server Running...");
 });
 
 app.listen(port, () => {
-    console.log("Listening to server port:", port);
+    console.log("Server Running on port:", port);
 });
