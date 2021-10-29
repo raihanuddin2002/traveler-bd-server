@@ -45,7 +45,7 @@ async function run () {
         const servicesCollention = database.collection("proceedOrder");
         
         // POST API
-        app.post("/services/:id", async (req,res) => {
+        app.post("/orderPlace/:id", async (req,res) => {
             const user = req.body;
             const result = await servicesCollention.insertOne("hiiting",user);
            res.send(result);
@@ -53,7 +53,6 @@ async function run () {
 
         app.post("/myOrders", async (req,res) => {
             const userEmail = req.body.userEmail;
-            //console.log(userEmail);
             const cursor =servicesCollention.find({});
             const result = await cursor.toArray();
             const newResult = result.filter(newResult => newResult.email === userEmail);
