@@ -32,7 +32,9 @@ async function run () {
             const query = {_id: ObjectId(id)}
             const service = await servicesCollention.findOne(query);
             res.send(service);
-        })
+        });
+
+       
 
     }finally{
 
@@ -66,13 +68,27 @@ async function run () {
             res.send(newResult);
         });
 
+         // PUT API
+        app.put("/services", async (req,res) => {
+            const id = req.body.id;
+            const query = {_id: ObjectId(id)}
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    orderStatus: `Approved`
+                },
+              };
+            const service = await servicesCollention.updateOne(query,updateDoc,options);
+            res.send(service);
+        });
+
         //    DELETE API
         app.delete("/myOrders/:id", async(req,res) => {
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await servicesCollention.deleteOne(query);
             res.send(result);
-        })
+        });
     }finally{
 
     }
