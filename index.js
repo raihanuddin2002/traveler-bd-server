@@ -44,10 +44,16 @@ async function run () {
         const database = client.db("traveller");
         const servicesCollention = database.collection("proceedOrder");
         
+        // GET API
+        app.get("/allOrders", async(req,res) => {
+            const cursor = servicesCollention.find({});
+            console.log("Hitting the url");
+            const result = await cursor.toArray();
+            res.send(result);
+        })
         // POST API
         app.post("/placeOrder/:id", async (req,res) => {
             const user = req.body;
-            console.log("Hitting the post")
             const result = await servicesCollention.insertOne(user);
             res.send(result);
         });
