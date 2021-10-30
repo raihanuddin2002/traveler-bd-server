@@ -45,12 +45,6 @@ async function run () {
         const servicesCollention = database.collection("proceedOrder");
         
         // POST API
-    //     app.post("/orderPlace/:id", async (req,res) => {
-    //         const user = req.body;
-    //         console.log("Hitting the post")
-    //         const result = await servicesCollention.insertOne(user);
-    //        res.send(result);
-    //    });
         app.post("/placeOrder/:id", async (req,res) => {
             const user = req.body;
             console.log("Hitting the post")
