@@ -33,9 +33,11 @@ async function run () {
             const service = await servicesCollention.findOne(query);
             res.send(service);
         });
-
-       
-
+        app.post("/services", async (req,res) => {
+            const serviceInfo = req.body.serviceInfo;
+            const service = await servicesCollention.insertOne(serviceInfo);
+            res.send(service);
+        });
     }finally{
 
     }
